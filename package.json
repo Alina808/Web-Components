@@ -1,0 +1,24 @@
+{
+    "name": "web-components",
+    "version": "1.0.0",
+    "description": "<a href='https://github.com/Alina808/Web-Components/'>Link to Preview all Solutions</a>",
+    "main": "index.js",
+    "scripts": {
+        "start": "vite",
+        "build": "npm run clean && vite build",
+        "preview": "vite preview",
+        "clean": "rimraf  dist"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git@github.com:Alina808/Web-Components.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "rimraf": "^6.1.2",
+        "sass-embedded": "^1.87.0",
+        "vite": "^6.3.5"
+    }
+}
