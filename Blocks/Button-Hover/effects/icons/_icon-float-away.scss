@@ -1,0 +1,30 @@
+/* Icon Float Away */
+@keyframes hvr-icon-float-away {
+	0% {
+		opacity: 1;
+	}
+	100% {
+		opacity: 0;
+		transform: translateY(-1em);
+	}
+}
+
+.hvr-icon-float-away {
+	display: inline-block;
+	vertical-align: middle;
+	transform: perspective(1px) translateZ(0);
+	box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+
+	.hvr-icon {
+		transform: translateZ(0);
+		animation-duration: 0.5s;
+		animation-fill-mode: forwards;
+	}
+
+	&:hover .hvr-icon,
+	&:focus-visible .hvr-icon,
+	&:active .hvr-icon {
+		animation-name: hvr-icon-float-away;
+		animation-timing-function: ease-out;
+	}
+}

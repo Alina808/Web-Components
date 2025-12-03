@@ -1,0 +1,23 @@
+/* Pulse Shrink */
+@keyframes hvr-pulse-shrink {
+  to {
+    transform: scale(0.9);
+  }
+}
+
+.hvr-pulse-shrink {
+  display: inline-block;
+  vertical-align: middle;
+  transform: perspective(1px) translateZ(0);
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+
+  &:hover,
+  &:focus-visible,
+  &:active {
+    animation-name: hvr-pulse-shrink;
+    animation-duration: 0.3s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+  }
+}

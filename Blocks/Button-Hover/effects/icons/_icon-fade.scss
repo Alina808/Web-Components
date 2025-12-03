@@ -1,0 +1,19 @@
+/* Icon Fade */
+.hvr-icon-fade {
+  display: inline-block;
+  vertical-align: middle;
+  transform: perspective(1px) translateZ(0);
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+
+  .hvr-icon {
+    transform: translateZ(0);
+    transition-duration: 0.5s;
+    transition-property: color;
+  }
+
+  &:hover .hvr-icon,
+  &:focus-visible .hvr-icon,
+  &:active .hvr-icon {
+    color: #0F9E5E;
+  }
+}

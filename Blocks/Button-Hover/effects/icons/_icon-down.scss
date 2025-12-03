@@ -1,0 +1,31 @@
+/* Icon Down */
+@keyframes hvr-icon-down {
+  0%,
+  50%,
+  100% {
+    transform: translateY(0);
+  }
+  25%,
+  75% {
+    transform: translateY(6px);
+  }
+}
+
+.hvr-icon-down {
+  display: inline-block;
+  vertical-align: middle;
+  transform: perspective(1px) translateZ(0);
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+
+  .hvr-icon {
+    transform: translateZ(0);
+  }
+
+  &:hover .hvr-icon,
+  &:focus-visible .hvr-icon,
+  &:active .hvr-icon {
+    animation-name: hvr-icon-down;
+    animation-duration: 0.75s;
+    animation-timing-function: ease-out;
+  }
+}
