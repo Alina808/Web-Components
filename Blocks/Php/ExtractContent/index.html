@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Extract certain tag</title>
+    <link rel="stylesheet" href="./../../../dist/assets/index.css"/>
+    <link rel="icon" href="./../../../assets/favicon/favicon.png" sizes="32x32" type="image/png"/>
+</head>
+<body>
+    <section class="cards">
+        <div class="container">
+            <h1>Extract certain tag from content</h1>
+            <p class="subtext">extract certain html tag from content (in this example we are extracting h2 tags, but if you change the regexp it can be any tag)</p>
+            <pre><code>
+function extract_headings($content) {
+    $headings = array();
+
+    preg_match_all('/<h2[^>]*>(.*?)<\/h2>/i', $content, $matches);
+
+    if (!empty($matches[1])) {
+        foreach ($matches[1] as $heading_text) {
+            $clean_text = wp_strip_all_tags($heading_text);
+            if (!empty($clean_text)) {
+                $headings[] = array(
+                    'text' => $clean_text,
+                    'level' => 2
+                );
+            }
+        }
+    }
+
+    return $headings;
+}
+</code></pre>
+        </div>
+    </section>
+</body>
+</html>

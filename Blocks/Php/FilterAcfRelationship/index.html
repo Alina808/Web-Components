@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Filter Acf relationship</title>
+    <link rel="stylesheet" href="./../../../dist/assets/index.css"/>
+    <link rel="icon" href="./../../../assets/favicon/favicon.png" sizes="32x32" type="image/png"/>
+</head>
+<body>
+    <section class="cards">
+        <div class="container">
+            <h1>Filter posts from acf relationship field by specific param</h1>
+            <pre><code>
+function filtered_posts_by_param($post_ids, $param){
+    $post_ids_filtered = [];
+    foreach ($post_ids as $post_id){
+        if(get_field('acf_included', $post_id)){
+            if (in_array(strtoupper($param), array_map('strtoupper', array_column(get_field('acf_included', $post_id), 'value')))) {
+                $post_ids_filtered[] = $post_id;
+            }
+        } else {
+            $post_ids_filtered[] = $post_id;
+        }
+    }
+    return $post_ids_filtered;
+}
+</code></pre>
+        </div>
+    </section>
+</body>
+</html>

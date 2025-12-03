@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>User Geolocation</title>
+    <link rel="stylesheet" href="./../../../dist/assets/index.css"/>
+    <link rel="icon" href="./../../../assets/favicon/favicon.png" sizes="32x32" type="image/png"/>
+</head>
+<body>
+    <section class="cards">
+        <div class="container">
+            <h1>Get User Geolocation based on his ip</h1>
+            <p class="subtext">this snippet takes user ip address and send this to the external free api to get his location</p>
+            <pre><code>
+function get_user_ip(){
+    if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+        return $_SERVER['HTTP_CLIENT_IP'];
+    } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+        return $_SERVER['HTTP_X_FORWARDED_FOR'];
+    } else {
+        return $_SERVER['REMOTE_ADDR'];
+    }
+}
+
+function get_user_country() {
+    if (!empty($_SESSION['user_country'])) {
+        return $_SESSION['user_country'];
+    }
+
+    $ip = get_user_ip() ?? '';
+    $country = null;
+    $response = wp_remote_get("https://api.country.is/{$ip}", [
+        'timeout' => 5,
+    ]);
+
+    if (!is_wp_error($response)) {
+        $body = wp_remote_retrieve_body($response);
+        $data = json_decode($body, true);
+        if (isset($data['country'])) {
+            $country = $data['country'];
+        }
+    }
+
+    $_SESSION['user_country'] = $country;
+    return $country;
+}
+
+function start_session_for_geo() {
+    if (!session_id()) {
+        session_start();
+    }
+}
+add_action('init', 'start_session_for_geo');
+</code></pre>
+        </div>
+    </section>
+</body>
+</html>

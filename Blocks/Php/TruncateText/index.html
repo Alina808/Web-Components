@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Truncate Text</title>
+    <link rel="stylesheet" href="./../../../dist/assets/index.css"/>
+    <link rel="icon" href="./../../../assets/favicon/favicon.png" sizes="32x32" type="image/png"/>
+</head>
+<body>
+    <section class="cards">
+        <div class="container">
+            <h1>Truncate text and add a suffix at the end of it</h1>
+            <pre><code>
+function truncate_text($text, $length = 100, $suffix = '...') {
+    if (strlen($text) <= $length) {
+        return $text;
+    }
+
+    return substr($text, 0, $length) . $suffix;
+}
+</code></pre>
+        </div>
+    </section>
+</body>
+</html>

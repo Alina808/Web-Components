@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Acf Migration</title>
+    <link rel="stylesheet" href="./../../../dist/assets/index.css"/>
+    <link rel="icon" href="./../../../assets/favicon/favicon.png" sizes="32x32" type="image/png"/>
+</head>
+<body>
+    <section class="cards">
+        <div class="container">
+            <h1>Acf Migration from acf blocks to acf flexible content</h1>
+            <p class="subtext">This code migrates content from acf blocks that was added on a page with a simple acf select to flexible acf field that contains acf fields wrappered in acf blocks with the same names as the old fields. Can be used with other migrations but the initial logic of getting old fields should be changed</p>
+            <p class="subtext">This snippet creates a function which will run if the page has GET param 'migrate' which contains the post that we want to migrate, this get param is available only for admins</p>
+            <pre><code>
+add_action('init', 'migrate_old_acf_fields');
+
+function migrate_old_acf_fields(){
+
+    //functionality to trigger migration on get param migrate, if post id is added will work only on page/post with this id
+    //if added a text, then it will trigger migration on all posts/pages
+    if (!isset($_GET['migrate'])) {
+        return;
+    }
+
+    //if non-admin user tries to trigger it, then exit
+    if (!current_user_can('manage_options')) {
+        return;
+    }
+
+    $param = $_GET['migrate'];
+    $args = [
+        'post_type' => ['page', 'post'],
+        'posts_per_page' => -1,
+    ];
+
+    if (is_numeric($param)) {
+        $args = array_merge($args, ['post__in' => [(int) $param]]);
+    } else {
+        return;
+    }
+
+    $posts = get_posts($args);
+
+    foreach ($posts as $post) {
+        $rows = get_field('select_field_with_values', $post->ID);
+
+        if (!$rows) continue;
+        $flex_data = [];
+
+        foreach ($rows as $type) {
+            $type = $type['block_type_from_selected_values'];
+            $layout_data = [];
+
+            if ($type) {
+                $row_data = get_field($type, $post->ID);
+            }
+
+            if (!empty($row_data)) {
+                foreach ($row_data as $data_label => $data_value) {
+                    $layout_data[$data_label] = migrate_field_value($data_value);
+                }
+            }
+
+            $layout = [
+                'acf_fc_layout' => $type,
+                $type => $layout_data
+            ];
+
+            $flex_data[] = $layout;
+
+        }
+
+        update_field('flexible_field_containing_acf_blocks', $flex_data, $post->ID);
+    }
+}
+
+//handling correct data adding
+function migrate_field_value($value) {
+
+    //for repeater
+    if (is_array($value)) {
+
+        $new_value = [];
+
+        foreach ($value as $key => $sub_value) {
+            $new_value[$key] = migrate_field_value($sub_value);
+        }
+        return $new_value;
+    }
+
+    //for images
+    if (is_string($value) && filter_var($value, FILTER_VALIDATE_URL)) {
+        $attachment_id = get_attachment_id_by_url($value);
+
+        if ($attachment_id) {
+            return $attachment_id;
+        }
+    }
+
+    //for default text, number
+    return $value;
+}
+
+//get image attachment from image link to correctly add to acf image field
+function get_attachment_id_by_url($url) {
+    global $wpdb;
+
+    if (empty($url)) return $url;
+
+    $url = strtok($url, '?');
+    $upload_dir = wp_get_upload_dir();
+
+    if (strpos($url, $upload_dir['baseurl']) === false) {
+        return $url;
+    }
+
+    $relative_path = str_replace($upload_dir['baseurl'] . '/', '', $url);
+
+    $attachment_id = $wpdb->get_var($wpdb->prepare(
+        "SELECT post_id FROM $wpdb->postmeta
+        WHERE meta_key = '_wp_attached_file'
+        AND meta_value = %s LIMIT 1",
+        $relative_path
+    ));
+
+    if ($attachment_id) {
+        return (int) $attachment_id;
+    }
+
+    $path_info = pathinfo($relative_path);
+    $filename = $path_info['filename'];
+    $ext = $path_info['extension'];
+
+    if (preg_match('/(.+)-\d+x\d+$/', $filename, $matches)) {
+
+        $clean_filename = $matches[1] . '.' . $ext;
+
+        $attachment_id = $wpdb->get_var($wpdb->prepare(
+            "SELECT post_id FROM $wpdb->postmeta
+            WHERE meta_key = '_wp_attached_file'
+            AND meta_value LIKE %s LIMIT 1",
+            '%' . $clean_filename
+        ));
+
+        if ($attachment_id) {
+            return (int) $attachment_id;
+        }
+    }
+
+    return $url;
+}
+</code></pre>
+        </div>
+    </section>
+</body>
+</html>

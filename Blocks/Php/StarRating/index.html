@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Show Rating Stars</title>
+    <link rel="stylesheet" href="./../../../dist/assets/index.css"/>
+    <link rel="icon" href="./../../../assets/favicon/favicon.png" sizes="32x32" type="image/png"/>
+</head>
+<body>
+    <section class="cards">
+        <div class="container">
+            <h1>Shows star rating</h1>
+            <pre><code>
+function generate_star_rating($rating) {
+    $full_stars = floor($rating);
+    $half_star = ($rating - $full_stars) >= 0.5 ? 1 : 0;
+    $empty_stars = 5 - $full_stars - $half_star;
+
+    $stars_html = '';
+
+    // Full stars
+    for ($i = 0; $i < $full_stars; $i++) {
+        $stars_html .= '&lt;svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" class="rating-star rating-star-full"&gt;
+            &lt;path d="M7.63067 1.28797C7.76731 0.903449 8.23269 0.903449 8.36933 1.28797L10.0222 5.26195C10.0798 5.40045 10.2101 5.49508 10.3596 5.50707L14.6498 5.85101C15.0645 5.87944 15.2283 6.32205 14.8781 6.55351L11.6094 9.35351C11.4954 9.45111 11.4457 9.60424 11.4805 9.75008L12.4791 13.9366C12.5617 14.3227 12.1852 14.6363 11.8815 14.4708L8.20845 12.1274C8.08046 12.0492 7.91954 12.0492 7.79155 12.1274L4.11846 14.4708C3.81477 14.6363 3.4383 14.3227 3.52086 13.9366L4.51951 9.75008C4.55432 9.60424 4.50463 9.45111 4.39064 9.35351L1.12195 6.55351C0.771728 6.32205 0.935506 5.87944 1.35019 5.85101L5.64037 5.50707C5.78989 5.49508 5.92016 5.40045 5.97776 5.26195L7.63067 1.28797Z" fill="#FDB022"/&gt;
+        &lt;/svg&gt;';
+    }
+
+    // Half star
+    if ($half_star) {
+        $stars_html .= '&lt;svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" class="rating-star rating-star-half"&gt;
+            &lt;defs&gt;
+                &lt;linearGradient id="half-star"&gt;
+                    &lt;stop offset="50%" stop-color="#FDB022"/&gt;
+                    &lt;stop offset="50%" stop-color="#E5E7EB"/&gt;
+                &lt;/linearGradient&gt;
+            &lt;/defs&gt;
+            &lt;path d="M7.63067 1.28797C7.76731 0.903449 8.23269 0.903449 8.36933 1.28797L10.0222 5.26195C10.0798 5.40045 10.2101 5.49508 10.3596 5.50707L14.6498 5.85101C15.0645 5.87944 15.2283 6.32205 14.8781 6.55351L11.6094 9.35351C11.4954 9.45111 11.4457 9.60424 11.4805 9.75008L12.4791 13.9366C12.5617 14.3227 12.1852 14.6363 11.8815 14.4708L8.20845 12.1274C8.08046 12.0492 7.91954 12.0492 7.79155 12.1274L4.11846 14.4708C3.81477 14.6363 3.4383 14.3227 3.52086 13.9366L4.51951 9.75008C4.55432 9.60424 4.50463 9.45111 4.39064 9.35351L1.12195 6.55351C0.771728 6.32205 0.935506 5.87944 1.35019 5.85101L5.64037 5.50707C5.78989 5.49508 5.92016 5.40045 5.97776 5.26195L7.63067 1.28797Z" fill="url(#half-star)"/&gt;
+        &lt;/svg&gt;';
+    }
+
+    // Empty stars
+    for ($i = 0; $i < $empty_stars; $i++) {
+        $stars_html .= '&lt;svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" class="rating-star rating-star-empty"&gt;
+            &lt;path d="M7.63067 1.28797C7.76731 0.903449 8.23269 0.903449 8.36933 1.28797L10.0222 5.26195C10.0798 5.40045 10.2101 5.49508 10.3596 5.50707L14.6498 5.85101C15.0645 5.87944 15.2283 6.32205 14.8781 6.55351L11.6094 9.35351C11.4954 9.45111 11.4457 9.60424 11.4805 9.75008L12.4791 13.9366C12.5617 14.3227 12.1852 14.6363 11.8815 14.4708L8.20845 12.1274C8.08046 12.0492 7.91954 12.0492 7.79155 12.1274L4.11846 14.4708C3.81477 14.6363 3.4383 14.3227 3.52086 13.9366L4.51951 9.75008C4.55432 9.60424 4.50463 9.45111 4.39064 9.35351L1.12195 6.55351C0.771728 6.32205 0.935506 5.87944 1.35019 5.85101L5.64037 5.50707C5.78989 5.49508 5.92016 5.40045 5.97776 5.26195L7.63067 1.28797Z" fill="#E5E7EB"/&gt;
+        &lt;/svg&gt;';
+    }
+
+    return $stars_html;
+}
+</code></pre>
+        </div>
+    </section>
+</body>
+</html>
